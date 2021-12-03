@@ -10,9 +10,9 @@ namespace Api.Data.Mapping
         {
             builder.ToTable("User");
 
-            builder.HasKey(p => p.Id);
+            builder.HasKey(u => u.Id);
 
-            builder.HasIndex(p =>p.Email)
+            builder.HasIndex(u =>u.Email)
                    .IsUnique();
             
             builder.Property(u =>u.Name)

@@ -32,10 +32,39 @@ namespace Data.Rpository
             throw new NotImplementedException();
         }
 
-        public Task<T> InsertAsync(T item)
+
+
+
+
+        public async Task<T> InsertAsync(T item)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (item.Id  == Guid.Empty)
+                {
+
+                    item.Id = Guid.NewGuid();
+
+                }
+
+                item.createAt = DateTime.UtcNow;
+                _dataset.Add(item);
+
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+            return  item;
         }
+
+
+
+
+
 
         public Task<T> SelectAsync(Guid id)
         {
@@ -47,9 +76,27 @@ namespace Data.Rpository
             throw new NotImplementedException();
         }
 
-        public Task<T> UpdateAsync(T item)
+        public async Task<T> UpdateAsync(T item)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var result = await _dataset.SingleOrDefaultAsync(p => p.Id.Equals(item.Id));
+                if (result == null)
+                    return null;
+
+                item.UpdateAt = DateTime.UtcNow;
+                item.createAt = result.createAt;
+
+                _context.Entry(result).CurrentValues.SetValues(item);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+            return item;
         }
     }
 }
